@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>威尔逊排球互动3D展示</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      flex: 1;
+    }
+    .content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: center;
+      justify-content: center;
+    }
+    .canvas-container {
+      flex: 1;
+      min-width: 300px;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    #renderCanvas {
+      width: 100%;
+      height: 400px;
+      display: block;
+    }
+    .info {
+      flex: 1;
+      min-width: 300px;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 1.5rem;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      color: #ffcc00;
+    }
+    p {
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .instructions {
+      margin-top: 2rem;
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 1.5rem;
+      border-radius: 8px;
+      border-left: 4px solid #ffcc00;
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .feature {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .github-btn {
+      display: inline-block;
+      background-color: #24292e;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 1rem;
+      transition: background-color 0.3s;
+    }
+    .github-btn:hover {
+      background-color: #2ea44f;
+    }
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background-color: rgba(0, 0, 0, 0.7);
+      margin-top: 2rem;
+    }
+    @media (max-width: 768px) {
+      .content {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>威尔逊排球3D互动展示</h1>
+    <p>基于Verge3D技术的沉浸式体验</p>
+  </header>
+
+  <div class="container">
+    <div class="content">
+      <div class="canvas-container">
+        <!-- 3D渲染区域 -->
+        <canvas id="renderCanvas"></canvas>
+      </div>
+      
+      <div class="info">
+        <h2>关于这个项目</h2>
+        <p>这是一个使用Verge3D创建的交互式3D排球展示应用。您可以通过拖拽来旋转视图，缩放来调整大小，并与3D模型进行互动。</p>
+        
+        <div class="features">
+          <div class="feature">
+            <h3>360°查看</h3>
+            <p>全方位观察排球设计</p>
+          </div>
+          <div class="feature">
+            <h3>交互式体验</h3>
+            <p>与3D模型直接互动</p>
+          </div>
+          <div class="feature">
+            <h3>响应式设计</h3>
+            <p>在各种设备上均可使用</p>
+          </div>
+        </div>
+        
+        <div class="instructions">
+          <h3>如何使用：</h3>
+          <p>1. 使用鼠标拖拽来旋转视角</p>
+          <p>2. 使用滚轮缩放模型</p>
+          <p>3. 点击模型上的热点查看详细信息</p>
+        </div>
+        
+        <a href="https://github.com/" class="github-btn">查看GitHub仓库</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2023 威尔逊排球3D展示 | 基于Verge3D技术</p>
+  </footer>
+
+  <script>
+    // 这里是简化的3D渲染代码
+    // 实际部署时，您需要将原始HTML中的JavaScript代码放在这里
+    document.addEventListener('DOMContentLoaded', function() {
+      const canvas = document.getElementById('renderCanvas');
+      const ctx = canvas.getContext('2d');
+      
+      // 设置canvas大小
+      function resizeCanvas() {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        drawPlaceholder();
+      }
+      
+      // 绘制占位图形
+      function drawPlaceholder() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // 绘制背景
+        const gradient = ctx.createRadialGradient(
+          canvas.width/2, canvas.height/2, 0,
+          canvas.width/2, canvas.height/2, canvas.width/2
+        );
+        gradient.addColorStop(0, 'rgba(50, 50, 70, 0.8)');
+        gradient.addColorStop(1, 'rgba(20, 20, 30, 0.8)');
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // 绘制排球轮廓
+        ctx.save();
+        ctx.translate(canvas.width/2, canvas.height/2);
+        const size = Math.min(canvas.width, canvas.height) * 0.4;
+        
+        // 绘制圆形
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.beginPath();
+        ctx.arc(0, 0, size, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // 绘制排球图案
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
+        ctx.lineWidth = 2;
+        
+        // 绘制曲线
+        for (let i = 0; i < 6; i++) {
+          ctx.beginPath();
+          ctx.arc(0, 0, size, i * Math.PI/3, (i + 0.5) * Math.PI/3);
+          ctx.stroke();
+        }
+        
+        // 绘制文字
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.font = 'bold 24px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('3D内容加载中...', 0, size + 40);
+        
+        ctx.restore();
+      }
+      
+      // 初始化
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+      
+      // 模拟加载过程
+      setTimeout(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.font = '20px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('在实际部署中，这里将显示3D排球模型', canvas.width/2, canvas.height/2);
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
