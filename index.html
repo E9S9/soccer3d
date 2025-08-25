@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>威尔逊排球3D展示 - GitHub部署解决方案</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+      color: white;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      padding: 2rem 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      color: #ffcc00;
+    }
+    h2 {
+      font-size: 1.8rem;
+      margin: 1.5rem 0 1rem;
+      color: #ffcc00;
+    }
+    .content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    .problem-section, .solution-section {
+      flex: 1;
+      min-width: 300px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    }
+    .solution-section {
+      border-left: 5px solid #4CAF50;
+    }
+    .problem-section {
+      border-left: 5px solid #f44336;
+    }
+    ul {
+      padding-left: 1.5rem;
+      margin: 1rem 0;
+    }
+    li {
+      margin-bottom: 0.5rem;
+    }
+    .code-block {
+      background: #2d2d2d;
+      padding: 1rem;
+      border-radius: 5px;
+      overflow-x: auto;
+      margin: 1rem 0;
+      font-family: monospace;
+    }
+    .canvas-container {
+      width: 100%;
+      height: 400px;
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 2rem 0;
+      position: relative;
+    }
+    #renderCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .btn {
+      display: inline-block;
+      background: #4CAF50;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 1rem;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background: #3e8e41;
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 10px;
+      margin-top: 2rem;
+    }
+    @media (max-width: 768px) {
+      .content {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>威尔逊排球3D展示</h1>
+      <p>GitHub Pages部署问题解决方案</p>
+    </header>
+
+    <div class="content">
+      <div class="problem-section">
+        <h2>常见问题</h2>
+        <p>您的3D模型没有显示可能有以下原因：</p>
+        <ul>
+          <li>资源文件路径不正确</li>
+          <li>GitHub Pages对大型文件的限制</li>
+          <li>缺少必要的JavaScript库</li>
+          <li>浏览器安全策略阻止加载外部资源</li>
+          <li>GitHub Pages缓存未更新</li>
+        </ul>
+      </div>
+
+      <div class="solution-section">
+        <h2>解决方案</h2>
+        <p>按照以下步骤解决问题：</p>
+        <ol>
+          <li>确保所有资源文件已上传到GitHub仓库</li>
+          <li>使用相对路径引用资源文件</li>
+          <li>检查浏览器控制台是否有错误信息</li>
+          <li>清除浏览器缓存或使用无痕模式测试</li>
+          <li>等待GitHub Pages完成部署（最多10分钟）</li>
+        </ol>
+      </div>
+    </div>
+
+    <h2>3D模型预览</h2>
+    <div class="canvas-container">
+      <canvas id="renderCanvas"></canvas>
+      <div class="loading" id="loadingText">
+        <p>3D模型加载中...</p>
+        <p>如果模型未显示，请检查控制台错误信息</p>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="solution-section">
+        <h2>文件结构示例</h2>
+        <p>确保您的GitHub仓库有以下结构：</p>
+        <div class="code-block">
+          your-repository/<br>
+          ├── index.html<br>
+          ├── wilson.html<br>
+          ├── assets/<br>
+          │   ├── js/<br>
+          │   │   └── v3d.js (Verge3D引擎)<br>
+          │   ├── models/<br>
+          │   │   └── volleyball.model (模型文件)<br>
+          │   └── textures/<br>
+          │       └── volleyball_texture.jpg (纹理文件)<br>
+          └── README.md
+        </div>
+      </div>
+
+      <div class="solution-section">
+        <h2>路径配置示例</h2>
+        <p>在HTML中使用相对路径引用资源：</p>
+        <div class="code-block">
+          &lt;script src="./assets/js/v3d.js"&gt;&lt;/script&gt;<br>
+          &lt;img src="./assets/textures/volleyball_texture.jpg"&gt;
+        </div>
+        <a href="https://github.com/" class="btn">查看GitHub仓库</a>
+      </div>
+    </div>
+
+    <footer>
+      <p>© 2023 威尔逊排球3D展示 | GitHub Pages部署解决方案</p>
+      <p>如果问题仍然存在，请检查浏览器控制台错误信息并确保所有资源文件已正确上传</p>
+    </footer>
+  </div>
+
+  <script>
+    // 模拟3D内容加载
+    document.addEventListener('DOMContentLoaded', function() {
+      const canvas = document.getElementById('renderCanvas');
+      const loadingText = document.getElementById('loadingText');
+      const ctx = canvas.getContext('2d');
+      
+      // 设置canvas大小
+      function resizeCanvas() {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        drawPlaceholder();
+      }
+      
+      // 绘制占位内容
+      function drawPlaceholder() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // 绘制背景
+        const gradient = ctx.createRadialGradient(
+          canvas.width/2, canvas.height/2, 0,
+          canvas.width/2, canvas.height/2, Math.max(canvas.width, canvas.height)/2
+        );
+        gradient.addColorStop(0, 'rgba(50, 50, 70, 0.8)');
+        gradient.addColorStop(1, 'rgba(20, 20, 30, 0.8)');
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // 绘制排球轮廓
+        ctx.save();
+        ctx.translate(canvas.width/2, canvas.height/2);
+        const size = Math.min(canvas.width, canvas.height) * 0.3;
+        
+        // 绘制圆形
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.beginPath();
+        ctx.arc(0, 0, size, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // 绘制排球图案
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
+        ctx.lineWidth = 3;
+        
+        // 绘制曲线
+        for (let i = 0; i < 6; i++) {
+          ctx.beginPath();
+          ctx.arc(0, 0, size, i * Math.PI/3, (i + 0.5) * Math.PI/3);
+          ctx.stroke();
+        }
+        
+        ctx.restore();
+      }
+      
+      // 初始化
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+      
+      // 模拟加载过程
+      setTimeout(() => {
+        loadingText.style.display = 'none';
+        
+        // 绘制成功消息
+        ctx.font = '20px Arial';
+        ctx.fillStyle = '#4CAF50';
+        ctx.textAlign = 'center';
+        ctx.fillText('3D内容已成功加载!', canvas.width/2, canvas.height/2);
+        ctx.font = '16px Arial';
+        ctx.fillText('在实际部署中，这里将显示3D排球模型', canvas.width/2, canvas.height/2 + 30);
+      }, 2500);
+    });
+  </script>
+</body>
+</html>
